@@ -16,23 +16,25 @@ aq = AircraftRequests(sm)
 ae = AircraftEvents(sm)
 
 
-mc = aq.find("MAGNETIC_COMPASS")
-mv = aq.find("MAGVAR")
-print(mc.get() + mv.get())
+sm.createNonATCAircraft(title="DA62 Asobo", name="N12345", lat=52.2214, lon=13.32, rqst=1, hdg=189, gnd=1, alt=0, pitch=0, bank=0, speed=10)
+# mc = aq.find("MAGNETIC_COMPASS")
+# mv = aq.find("MAGVAR")
+# print(mc.get() + mv.get())
+
 
 sm.exit()
 quit()
 
 # Set pos arund space nedle in WA.
 sm.set_pos(
-	_Altitude=1000.0,
-	_Latitude=47.614699,
-	_Longitude=-122.358473,
-	_Airspeed=130,
-	_Heading=70.0,
-	# _Pitch=0.0,
-	# _Bank=0.0,
-	# _OnGround=0
+    _Altitude=1000.0,
+    _Latitude=47.614699,
+    _Longitude=-122.358473,
+    _Airspeed=130,
+    _Heading=70.0,
+    # _Pitch=0.0,
+    # _Bank=0.0,
+    # _OnGround=0
 )
 
 # PARKING_BRAKES = Event(b'PARKING_BRAKES', sm)
@@ -48,7 +50,7 @@ THROTTLE1 = ae.Engine.THROTTLE1_SET
 
 
 # THROTTLE1 Request
-Throttle = aq.find('GENERAL_ENG_THROTTLE_LEVER_POSITION:1')
+Throttle = aq.find("GENERAL_ENG_THROTTLE_LEVER_POSITION:1")
 
 # If useing
 # Throttle = aq.find('GENERAL_ENG_THROTTLE_LEVER_POSITION:index')
@@ -59,7 +61,7 @@ Throttle = aq.find('GENERAL_ENG_THROTTLE_LEVER_POSITION:1')
 
 # print the built in description
 # AP_MASTER Toggles AP on/off
-print("AP_MASTER", AP_MASTER.description) 
+print("AP_MASTER", AP_MASTER.description)
 # Throttle Percent of max throttle position
 print("Throttle", Throttle.description)
 # THROTTLE1 Set throttle 1 exactly (0 to 16383)
@@ -67,28 +69,23 @@ print("THROTTLE1", THROTTLE1.description)
 
 
 while not sm.quit:
-	print("Throttle:", Throttle.value)
-	print("Alt=%f Lat=%f Lon=%f Kohlsman=%.2f" % (
-		aq.PositionandSpeedData.get('PLANE_ALTITUDE'),
-		aq.PositionandSpeedData.get('PLANE_LATITUDE'),
-		aq.PositionandSpeedData.get('PLANE_LONGITUDE'),
-		aq.FlightInstrumentationData.get('KOHLSMAN_SETTING_HG')
-	))
-	sleep(2)
+    print("Throttle:", Throttle.value)
+    print("Alt=%f Lat=%f Lon=%f Kohlsman=%.2f" % (aq.PositionandSpeedData.get("PLANE_ALTITUDE"), aq.PositionandSpeedData.get("PLANE_LATITUDE"), aq.PositionandSpeedData.get("PLANE_LONGITUDE"), aq.FlightInstrumentationData.get("KOHLSMAN_SETTING_HG")))
+    sleep(2)
 
-	# Send Event with value
-	# THROTTLE1(1500)
+    # Send Event with value
+    # THROTTLE1(1500)
 
-	# Send Event toggle AP_MASTER
-	# AP_MASTER()
+    # Send Event toggle AP_MASTER
+    # AP_MASTER()
 
-	# PARKING_BRAKES()
+    # PARKING_BRAKES()
 
-	# send new data inine @ 5s
-	if ct_g + 5000 < millis():
-		if Throttle.value < 100:
-			Throttle.value += 5
-			print("THROTTLE SET")
-		ct_g = millis()
+    # send new data inine @ 5s
+    if ct_g + 5000 < millis():
+        if Throttle.value < 100:
+            Throttle.value += 5
+            print("THROTTLE SET")
+        ct_g = millis()
 
 sm.exit()

@@ -407,7 +407,7 @@ class SimConnect:
         simInitPos.Airspeed = speed
         self.dll.AICreateSimulatedObject(self.hSimConnect, name.encode(), simInitPos, rqst.value)
 
-    def createNonATCAircraft(self, name, lat, lon, hdg=0, gnd=1, alt=0, pitch=0, bank=0, speed=0):
+    def createNonATCAircraft(self, title, name, lat, rqst, lon, hdg=0, gnd=1, alt=0, pitch=0, bank=0, speed=0):
         simInitPos = SIMCONNECT_DATA_INITPOSITION()
         simInitPos.Altitude = alt
         simInitPos.Latitude = lat
@@ -417,4 +417,4 @@ class SimConnect:
         simInitPos.Heading = hdg
         simInitPos.OnGround = gnd
         simInitPos.Airspeed = speed
-        self.dll.AICreateNonATCAircraft(self.hSimConnect, name.encode(), simInitPos)
+        self.dll.AICreateNonATCAircraft(self.hSimConnect, title.encode(), name.encode(), simInitPos, rqst.value)
