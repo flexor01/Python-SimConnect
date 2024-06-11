@@ -16,7 +16,13 @@ aq = AircraftRequests(sm)
 ae = AircraftEvents(sm)
 
 
-sm.createNonATCAircraft(title="DA62 Asobo", name="N12345", lat=52.2214, lon=13.32, rqst=1, hdg=189, gnd=1, alt=0, pitch=0, bank=0, speed=10)
+# get class definition for SIMCONNECT_DATA_INITPOSITION
+sm_types = sm.dll.AICreateNonATCAircraft.__ctypes_from_outparam__()
+INIT_POSITION = sm_types.argtypes[3]
+
+initPos = INIT_POSITION(c_double(40), c_double(-74), c_double(2000), c_double(0), c_double(0), c_double(0), DWORD(0), DWORD(-1))
+
+sm.dll.AICreateNonATCAircraft(sm.hSimConnect, c_char_p(b"Boeing 747-8f Asobo"), c_char_p(b"ABCD"), initPos, 123)
 # mc = aq.find("MAGNETIC_COMPASS")
 # mv = aq.find("MAGVAR")
 # print(mc.get() + mv.get())
