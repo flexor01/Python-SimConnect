@@ -4,6 +4,11 @@ from SimConnect.Enum import *
 from time import sleep
 
 
+class Request:
+    def __init__(self, value):
+        self.value = value
+
+
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger(__name__)
 LOGGER.info("START")
@@ -16,18 +21,16 @@ aq = AircraftRequests(sm)
 ae = AircraftEvents(sm)
 
 
-# get class definition for SIMCONNECT_DATA_INITPOSITION
-sm_types = sm.dll.AICreateNonATCAircraft.__ctypes_from_outparam__()
-INIT_POSITION = sm_types.argtypes[3]
+aircraft = sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=52.357220, lon=13.517951, rqst=Request(756), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=10)
+print(aircraft)
+# aircraft = sm.getNextDispatch()
+# sm.releaseControl(697, Request(182))
 
-initPos = INIT_POSITION(c_double(40), c_double(-74), c_double(2000), c_double(0), c_double(0), c_double(0), DWORD(0), DWORD(-1))
-
-sm.dll.AICreateNonATCAircraft(sm.hSimConnect, c_char_p(b"Boeing 747-8f Asobo"), c_char_p(b"ABCD"), initPos, 123)
 # mc = aq.find("MAGNETIC_COMPASS")
 # mv = aq.find("MAGVAR")
 # print(mc.get() + mv.get())
 
-
+sleep(300)
 sm.exit()
 quit()
 

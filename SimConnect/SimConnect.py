@@ -417,4 +417,26 @@ class SimConnect:
         simInitPos.Heading = hdg
         simInitPos.OnGround = gnd
         simInitPos.Airspeed = speed
-        self.dll.AICreateNonATCAircraft(self.hSimConnect, title.encode(), name.encode(), simInitPos, rqst.value)
+        result = self.dll.AICreateNonATCAircraft(self.hSimConnect, title.encode(), name.encode(), simInitPos, rqst.value)
+
+        return self.getObjectID(rqst.value)
+
+    def releaseControl(self, object_id, rqst):
+        self.dll.AIReleaseControl(self.hSimConnect, object_id, rqst.value)
+
+    def getObjectID(self, rqst):
+        while True:
+            pEvent = c_void_p()
+            pcbData = c_uint32(0)
+            hr = self.dll.GetNextDispatch(self.hSimConnect, byref(pEvent), byref(pcbData))
+            if hr == 0 and pEvent:
+                event = cast(pEvent, POINTER(SIMCONNECT_RECV))
+                if event.contents.dwID == SIMCONNECT_RECV_ID.SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
+                    assigned_object_id = cast(pEvent, POINTER(SIMCONNECT_RECV_ASSIGNED_OBJECT_ID)).contents.dwObjectID
+                    return assigned_object_id
+                else:
+                    hr = self.dll.CallDispatch(self.hSimConnect, pEvent, pcbData)
+                    if hr != 0:
+                        raise Exception(f"Error calling SimConnect_CallDispatch: {hr}")
+            elif hr != 0:
+                raise Exception(f"Error getting next dispatch: {hr}")
