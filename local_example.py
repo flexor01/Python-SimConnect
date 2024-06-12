@@ -2,6 +2,8 @@ from SimConnect import *
 import logging
 from SimConnect.Enum import *
 from time import sleep
+import threading
+import os
 
 
 class Request:
@@ -21,8 +23,28 @@ aq = AircraftRequests(sm)
 ae = AircraftEvents(sm)
 
 
-aircraft = sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=52.357220, lon=13.517951, rqst=Request(756), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=10)
-print(aircraft)
+sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=52.357444, lon=13.519050, rqst=Request(756), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
+# sleep(0.1)
+sm.run_event.wait()
+# id = sm.getObjectID()
+print(os.environ.get("SIMCONNECT_OBJECT_ID"))
+sleep(5)
+# sm.set_pos(
+#    _Altitude=0,
+#    object_id=id,
+#    _Latitude=52.357444,
+#    _Longitude=13.519050,
+#    _Airspeed=0,
+#    _Heading=250,
+#    _Pitch=0.0,
+#    _Bank=0.0,
+#    _OnGround=1,
+# )
+sm.createNonATCAircraft(title="Cessna Skyhawk Asobo", name="N12346", lat=52.357450, lon=13.519055, rqst=Request(10000), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
+sm.run_event.wait()
+print(os.environ.get("SIMCONNECT_OBJECT_ID"))
+sleep(2)
+
 # aircraft = sm.getNextDispatch()
 # sm.releaseControl(697, Request(182))
 
@@ -40,7 +62,7 @@ sm.set_pos(
     _Latitude=47.614699,
     _Longitude=-122.358473,
     _Airspeed=130,
-    _Heading=70.0,
+    _Heading=250,
     # _Pitch=0.0,
     # _Bank=0.0,
     # _OnGround=0
