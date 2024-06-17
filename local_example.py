@@ -13,11 +13,28 @@ def udp_receiver(host="10.0.21.238", port=5001):
 
     # Binden Sie das Socket an eine bestimmte Adresse und Port
     sock.bind((host, port))
-
+    first_time = True
     while True:
         # Empfangen Sie Daten vom Client
         data, addr = sock.recvfrom(1024)
         print(f"Empfangene Daten: {data} von {addr}")
+        data_str = data.decode("utf-8")
+        print(data_str)
+        data_parts = data_str.split(",")
+        lati = float(data_parts[0])
+        loni = float(data_parts[1])
+        alti = float(data_parts[2]) * 3.281
+        print(f"Latitude: {lati}, Longitude: {loni}, Altitude: {alti}")
+
+        if first_time == True:
+            sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=lati, lon=loni, rqst=Request(756), hdg=180, gnd=1, alt=alti, pitch=0, bank=0, speed=0)
+            sm.run_event.wait()
+            id = int(os.environ.get("SIMCONNECT_OBJECT_ID"))
+            first_time = False
+
+        sm.set_pos(_Altitude=alti, object_id=id, _Latitude=lati, _Longitude=loni, _Airspeed=0, _Heading=10, _Pitch=0.0, _Bank=0.0, _OnGround=0)
+        print("Position gesetzt")
+        print(aq.PositionandSpeedData.get("PLANE_ALTITUDE"))
 
 
 class Request:
@@ -36,15 +53,16 @@ sm = SimConnect()
 aq = AircraftRequests(sm)
 ae = AircraftEvents(sm)
 
+sm.set_pos(_Altitude=50, object_id=1, _Latitude=52.620836, _Longitude=13.153816, _Airspeed=0, _Heading=10, _Pitch=0.0, _Bank=0.0, _OnGround=1)
 udp_receiver()
 
-sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=52.357444, lon=13.519050, rqst=Request(756), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
+# sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=52.357444, lon=13.519050, rqst=Request(756), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
 # sleep(0.1)
-sm.run_event.wait()
+# sm.run_event.wait()
 # id = sm.getObjectID()
-print(os.environ.get("SIMCONNECT_OBJECT_ID"))
+# print(os.environ.get("SIMCONNECT_OBJECT_ID"))
 sleep(5)
-# sm.set_pos(
+## sm.set_pos(
 #    _Altitude=0,
 #    object_id=id,
 #    _Latitude=52.357444,
@@ -55,10 +73,10 @@ sleep(5)
 #    _Bank=0.0,
 #    _OnGround=1,
 # )
-sm.createNonATCAircraft(title="Cessna Skyhawk Asobo", name="N12346", lat=52.357450, lon=13.519055, rqst=Request(10000), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
-sm.run_event.wait()
-print(os.environ.get("SIMCONNECT_OBJECT_ID"))
-sleep(2)
+# sm.createNonATCAircraft(title="Cessna Skyhawk Asobo", name="N12346", lat=52.357450, lon=13.519055, rqst=Request(10000), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
+# sm.run_event.wait()
+# print(os.environ.get("SIMCONNECT_OBJECT_ID"))
+# sleep(2)
 
 # aircraft = sm.getNextDispatch()
 # sm.releaseControl(697, Request(182))
