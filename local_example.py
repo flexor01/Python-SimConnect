@@ -4,6 +4,20 @@ from SimConnect.Enum import *
 from time import sleep
 import threading
 import os
+import socket
+
+
+def udp_receiver(host="10.0.21.238", port=5001):
+    # Erstellen Sie ein UDP-Socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Binden Sie das Socket an eine bestimmte Adresse und Port
+    sock.bind((host, port))
+
+    while True:
+        # Empfangen Sie Daten vom Client
+        data, addr = sock.recvfrom(1024)
+        print(f"Empfangene Daten: {data} von {addr}")
 
 
 class Request:
@@ -22,6 +36,7 @@ sm = SimConnect()
 aq = AircraftRequests(sm)
 ae = AircraftEvents(sm)
 
+udp_receiver()
 
 sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=52.357444, lon=13.519050, rqst=Request(756), hdg=189, gnd=1, alt=160, pitch=0, bank=0, speed=0)
 # sleep(0.1)
