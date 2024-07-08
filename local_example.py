@@ -24,17 +24,20 @@ def udp_receiver(host="10.0.21.238", port=5001):
         lati = float(data_parts[0])
         loni = float(data_parts[1])
         alti = float(data_parts[2]) * 3.281
-        print(f"Latitude: {lati}, Longitude: {loni}, Altitude: {alti}")
+        hdgi = float(data_parts[3])
+        pitchi = float(data_parts[4])
+        rolli = float(data_parts[5])
+        speedi = int(data_parts[6])
+        print(f"Latitude: {lati}, Longitude: {loni}, Altitude: {alti}, Heading: {hdgi}, Pitch: {pitchi}, Roll: {rolli}, speed: {speedi}")
 
         if first_time == True:
-            sm.createNonATCAircraft(title="Boeing 747-8i Asobo", name="N12345", lat=lati, lon=loni, rqst=Request(756), hdg=180, gnd=1, alt=alti, pitch=0, bank=0, speed=0)
+            sm.createSimulatedObject(name="Volocity Microsoft", lat=lati, lon=loni, rqst=Request(756), hdg=hdgi, gnd=1, alt=alti, pitch=pitchi, bank=rolli, speed=speedi)
             sm.run_event.wait()
             id = int(os.environ.get("SIMCONNECT_OBJECT_ID"))
             first_time = False
 
-        sm.set_pos(_Altitude=alti, object_id=id, _Latitude=lati, _Longitude=loni, _Airspeed=0, _Heading=10, _Pitch=0.0, _Bank=0.0, _OnGround=0)
+        sm.set_pos(_Altitude=alti, object_id=id, _Latitude=lati, _Longitude=loni, _Airspeed=speedi, _Heading=hdgi, _Pitch=pitchi, _Bank=rolli, _OnGround=0)
         print("Position gesetzt")
-        print(aq.PositionandSpeedData.get("PLANE_ALTITUDE"))
 
 
 class Request:
