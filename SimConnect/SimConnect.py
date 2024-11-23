@@ -82,7 +82,7 @@ class SimConnect:
 
         elif dwID == SIMCONNECT_RECV_ID.SIMCONNECT_RECV_ID_SYSTEM_STATE:
             state = cast(pData, POINTER(SIMCONNECT_RECV_SYSTEM_STATE)).contents
-            self.handle_state_event(state)
+            #self.handle_state_event(state)
 
         elif dwID == SIMCONNECT_RECV_ID.SIMCONNECT_RECV_ID_SIMOBJECT_DATA_BYTYPE:
             pObjData = cast(pData, POINTER(SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE)).contents
